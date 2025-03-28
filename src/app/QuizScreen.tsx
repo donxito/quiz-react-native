@@ -3,7 +3,9 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
+import questions from "../questions";
 
+const question = questions[2];
 export default function QuizScreen() {
   const handleNext = () => {
     console.warn("pressed next");
@@ -19,7 +21,7 @@ export default function QuizScreen() {
 
         {/* Question Card */}
         <View>
-          <QuestionCard />
+          <QuestionCard question={question} />
           <Text style={styles.time}>20 sec</Text>
         </View>
 

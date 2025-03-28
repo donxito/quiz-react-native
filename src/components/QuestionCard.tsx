@@ -1,16 +1,37 @@
 import { View, Text, StyleSheet } from "react-native";
 import AnswerOption from "./AnswerOption";
+import { Question } from "../types";
 
-export default function QuestionCard() {
+type QuestionCard = {
+  question: Question;
+};
+
+export default function QuestionCard({ question }: QuestionCard) {
+  // console.log(props);
+
+  const selectedOption = question.options[3];
+
   return (
     <View style={styles.QuestionCard}>
-      <Text style={styles.question}>What is Life?</Text>
+      <Text style={styles.question}>{question.title}</Text>
 
       <View style={{ gap: 10 }}>
-        <AnswerOption />
-        <AnswerOption />
-        <AnswerOption />
-        <AnswerOption />
+        <AnswerOption
+          isSelected={selectedOption === question.options[0]}
+          option={question.options[0]}
+        />
+        <AnswerOption
+          isSelected={selectedOption === question.options[1]}
+          option={question.options[1]}
+        />
+        <AnswerOption
+          isSelected={selectedOption === question.options[2]}
+          option={question.options[2]}
+        />
+        <AnswerOption
+          isSelected={selectedOption === question.options[3]}
+          option={question.options[3]}
+        />
       </View>
     </View>
   );

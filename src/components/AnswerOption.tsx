@@ -1,9 +1,19 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function AnswerOption() {
+type AnswerOption = {
+  option: string;
+  isSelected?: boolean;
+};
+
+export default function AnswerOption({ option, isSelected }: AnswerOption) {
   return (
-    <View style={styles.container}>
-      <Text>Answer Option</Text>
+    <View
+      style={[
+        styles.container,
+        isSelected && { backgroundColor: "#E1F396", borderColor: "#A3C300" },
+      ]}
+    >
+      <Text>{option}</Text>
     </View>
   );
 }
