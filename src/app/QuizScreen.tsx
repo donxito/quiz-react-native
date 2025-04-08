@@ -5,7 +5,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
 import questions from "../questions";
 
-const question = questions[2];
+const question = questions[0];
 export default function QuizScreen() {
   const handleNext = () => {
     console.warn("pressed next");

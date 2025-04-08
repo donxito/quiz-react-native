@@ -7,30 +7,38 @@ type QuestionCard = {
 };
 
 export default function QuestionCard({ question }: QuestionCard) {
-  // console.log(props);
+  console.log(question);
 
-  const selectedOption = question.options[3];
+  const selectedOption = question.correctAnswer; // This should be replaced with the actual selected option from the state
+
+  const onOptionselected = (option: string) => {
+    console.warn("pressed: ", option);
+  };
 
   return (
     <View style={styles.QuestionCard}>
-      <Text style={styles.question}>{question.title}</Text>
+      <Text style={styles.question}>{question.question}</Text>
 
       <View style={{ gap: 10 }}>
         <AnswerOption
           isSelected={selectedOption === question.options[0]}
           option={question.options[0]}
+          onPress={() => onOptionselected(question.options[0])}
         />
         <AnswerOption
           isSelected={selectedOption === question.options[1]}
           option={question.options[1]}
+          onPress={() => onOptionselected}
         />
         <AnswerOption
           isSelected={selectedOption === question.options[2]}
           option={question.options[2]}
+          onPress={() => onOptionselected(question.options[2])}
         />
         <AnswerOption
           isSelected={selectedOption === question.options[3]}
           option={question.options[3]}
+          onPress={() => onOptionselected(question.options[3])}
         />
       </View>
     </View>

@@ -1,20 +1,27 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
 type AnswerOption = {
   option: string;
   isSelected?: boolean;
+  onPress: () => void; // doesn return anything
 };
 
-export default function AnswerOption({ option, isSelected }: AnswerOption) {
+export default function AnswerOption({
+  option,
+  isSelected,
+  onPress,
+}: AnswerOption) {
   return (
-    <View
+    <Pressable
+      onPress={onPress}
+      android_ripple={{ color: "#E1F396" }} // ripple effect on android
       style={[
         styles.container,
         isSelected && { backgroundColor: "#E1F396", borderColor: "#A3C300" },
       ]}
     >
       <Text>{option}</Text>
-    </View>
+    </Pressable>
   );
 }
 
