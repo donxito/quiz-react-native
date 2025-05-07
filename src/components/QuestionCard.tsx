@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View } from "react-native";
 import AnswerOption from "./AnswerOption";
-import { Question } from "../types";
+import { Question } from "../types/types";
+import Card from "./Card";
 
 type QuestionCard = {
   question: Question;
@@ -16,56 +17,17 @@ export default function QuestionCard({ question }: QuestionCard) {
   };
 
   return (
-    <View style={styles.QuestionCard}>
-      <Text style={styles.question}>{question.question}</Text>
-
+    <Card title={question.question}>
       <View style={{ gap: 10 }}>
-        <AnswerOption
-          isSelected={selectedOption === question.options[0]}
-          option={question.options[0]}
-          onPress={() => onOptionselected(question.options[0])}
-        />
-        <AnswerOption
-          isSelected={selectedOption === question.options[1]}
-          option={question.options[1]}
-          onPress={() => onOptionselected}
-        />
-        <AnswerOption
-          isSelected={selectedOption === question.options[2]}
-          option={question.options[2]}
-          onPress={() => onOptionselected(question.options[2])}
-        />
-        <AnswerOption
-          isSelected={selectedOption === question.options[3]}
-          option={question.options[3]}
-          onPress={() => onOptionselected(question.options[3])}
-        />
+        {question.options.map((option, index) => (
+          <AnswerOption
+            key={index}
+            isSelected={selectedOption === option}
+            option={option}
+            onPress={() => onOptionselected(option)}
+          />
+        ))}
       </View>
-    </View>
+    </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  QuestionCard: {
-    backgroundColor: "#f9f9f9", // light grey background for the card
-    padding: 20,
-    paddingVertical: 40,
-    borderRadius: 20,
-    gap: 20,
-
-    // shadows
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
-  question: {
-    fontSize: 24,
-    fontWeight: "500",
-  },
-});
