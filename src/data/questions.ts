@@ -1,4 +1,4 @@
-export default [
+const questions = [
   {
     question: "What is the capital of France?",
     options: ["Berlin", "Madrid", "Paris", "Rome", "Lisbon"],
@@ -131,4 +131,11 @@ export default [
     options: ["<img>", "<image>", "<src>", "<picture>"],
     correctAnswer: "<img>",
   },
+  {
+    question: "Which of these is NOT a JavaScript data type?",
+    options: ["Integer", "String", "Boolean", "Undefined"],
+    correctAnswer: "Integer",
+  },
 ];
+
+export default questions;

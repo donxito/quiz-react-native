@@ -1,11 +1,13 @@
 // https://reactnative.dev/docs/pressable
 
-import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
 import questions from "../data/questions";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import { useState, useEffect } from "react";
+import { Question } from "../types/types";
 
 const styles = StyleSheet.create({
   page: {
@@ -31,22 +33,52 @@ const styles = StyleSheet.create({
   },
 });
 
-// * Question
-const question = questions[6];
 export default function QuizScreen() {
+  const [availableQuestions, setAvailableQuestions] = useState([...questions]);
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [questionCount, setQuestionCount] = useState(0);
+
+  // * Initialize the quiz with a random question
+  useEffect(() => {
+    selectRandomQuestion();
+  }, []);
+
+  const selectRandomQuestion = () => {
+    if (availableQuestions.length === 0) {
+      setCurrentQuestion(null);
+      return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    const selectedQuestion = availableQuestions[randomIndex];
+
+    // * Remove the selected question from available questions
+    setAvailableQuestions((prev) =>
+      prev.filter((_, index) => index !== randomIndex)
+    );
+    setCurrentQuestion(selectedQuestion);
+    setQuestionCount((prev) => prev + 1);
+  };
+
+  // * Handle next question
+  const onNextQuestion = () => {
+    selectRandomQuestion();
+  };
+
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Question 1/5</Text>
+          <Text style={styles.title}>
+            Question {questionCount}/{questions.length}
+          </Text>
         </View>
 
         {/* Question Card */}
-
-        {question ? (
+        {currentQuestion ? (
           <View>
-            <QuestionCard question={question} />
+            <QuestionCard question={currentQuestion} />
             <Text style={styles.time}>20 sec</Text>
           </View>
         ) : (
@@ -59,7 +91,7 @@ export default function QuizScreen() {
         {/* Footer */}
         <Button
           title="Next"
-          onPress={() => console.warn("pressed next")}
+          onPress={onNextQuestion}
           onLongPress={() => console.warn("long press")}
           rightIcon={
             <FontAwesome6 name="arrow-right" size={16} color="white" />

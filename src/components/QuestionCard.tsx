@@ -2,18 +2,18 @@ import { View } from "react-native";
 import AnswerOption from "./AnswerOption";
 import { Question } from "../types/types";
 import Card from "./Card";
+import { useState } from "react";
 
 type QuestionCard = {
   question: Question;
 };
 
 export default function QuestionCard({ question }: QuestionCard) {
-  console.log(question);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const selectedOption = question.correctAnswer; // This should be replaced with the actual selected option from the state
-
+  // * handle option selection
   const onOptionselected = (option: string) => {
-    console.warn("pressed: ", option);
+    setSelectedOption(option);
   };
 
   return (
