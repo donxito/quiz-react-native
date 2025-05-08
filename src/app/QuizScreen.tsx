@@ -3,11 +3,9 @@
 import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
-import questions from "../data/questions";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import { useState, useEffect } from "react";
-import { Question } from "../types/types";
+import { useQuiz } from "../context/QuizProvider";
 
 const styles = StyleSheet.create({
   page: {
@@ -34,36 +32,14 @@ const styles = StyleSheet.create({
 });
 
 export default function QuizScreen() {
-  const [availableQuestions, setAvailableQuestions] = useState([...questions]);
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [questionCount, setQuestionCount] = useState(0);
-
-  // * Initialize the quiz with a random question
-  useEffect(() => {
-    selectRandomQuestion();
-  }, []);
-
-  const selectRandomQuestion = () => {
-    if (availableQuestions.length === 0) {
-      setCurrentQuestion(null);
-      return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-    const selectedQuestion = availableQuestions[randomIndex];
-
-    // * Remove the selected question from available questions
-    setAvailableQuestions((prev) =>
-      prev.filter((_, index) => index !== randomIndex)
-    );
-    setCurrentQuestion(selectedQuestion);
-    setQuestionCount((prev) => prev + 1);
-  };
-
-  // * Handle next question
-  const onNextQuestion = () => {
-    selectRandomQuestion();
-  };
+  const {
+    currentQuestion,
+    questionCount,
+    totalQuestions,
+    onNext,
+    score,
+    restartQuiz,
+  } = useQuiz();
 
   return (
     <SafeAreaView style={styles.page}>
@@ -71,7 +47,7 @@ export default function QuizScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>
-            Question {questionCount}/{questions.length}
+            Question {questionCount}/{totalQuestions}
           </Text>
         </View>
 
@@ -83,18 +59,27 @@ export default function QuizScreen() {
           </View>
         ) : (
           <Card title="No more questions available">
-            <Text>Correct answers: 3/5</Text>
-            <Text>Score: 80%</Text>
+            <Text>
+              Correct answers: {score}/{totalQuestions}
+            </Text>
+            <Text>
+              Correct percentage: {((score / totalQuestions) * 100).toFixed(2)}%
+            </Text>
           </Card>
         )}
 
         {/* Footer */}
+
         <Button
-          title="Next"
-          onPress={onNextQuestion}
+          title={currentQuestion ? "Next" : "Restart"}
+          onPress={currentQuestion ? onNext : restartQuiz}
           onLongPress={() => console.warn("long press")}
           rightIcon={
-            <FontAwesome6 name="arrow-right" size={16} color="white" />
+            currentQuestion ? (
+              <FontAwesome6 name="arrow-right" size={16} color="white" />
+            ) : (
+              <FontAwesome6 name="rotate" size={16} color="white" />
+            )
           }
         />
       </View>

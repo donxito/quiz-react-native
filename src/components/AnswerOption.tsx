@@ -1,19 +1,18 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable } from "react-native";
+import { useQuiz } from "../context/QuizProvider";
 
 type AnswerOption = {
   option: string;
-  isSelected?: boolean;
-  onPress: () => void; // doesn return anything
 };
 
-export default function AnswerOption({
-  option,
-  isSelected,
-  onPress,
-}: AnswerOption) {
+export default function AnswerOption({ option }: AnswerOption) {
+  const { selectedOption, setSelectedOption } = useQuiz();
+
+  const isSelected = selectedOption === option;
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => setSelectedOption?.(option)}
       android_ripple={{ color: "#E1F396" }} // ripple effect on android
       style={[
         styles.container,
