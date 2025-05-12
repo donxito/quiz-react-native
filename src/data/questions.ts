@@ -131,11 +131,11 @@ const questions = [
     options: ["<img>", "<image>", "<src>", "<picture>"],
     correctAnswer: "<img>",
   },
-  {
-    question: "Which of these is NOT a JavaScript data type?",
-    options: ["Integer", "String", "Boolean", "Undefined"],
-    correctAnswer: "Integer",
-  },
+  // {
+  //   question: "Which of these is NOT a JavaScript data type?",
+  //   options: ["Integer", "String", "Boolean", "Undefined"],
+  //   correctAnswer: "Integer",
+  // },
 ];
 
 export default questions;

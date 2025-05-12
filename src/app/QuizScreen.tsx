@@ -3,9 +3,11 @@
 import { View, Text, StyleSheet, SafeAreaView, Modal } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
-import Card from "../components/Card";
 import Button from "../components/Button";
 import { useQuiz } from "../context/QuizProvider";
+import { useEffect, useState } from "react";
+
+const SECONDS = 5; // seconds for the timer
 
 const styles = StyleSheet.create({
   page: {
@@ -68,7 +70,36 @@ export default function QuizScreen() {
     score,
     restartQuiz,
     isFinished,
+    //bestScore,
+    //setIsFinished,
   } = useQuiz();
+
+  const [timer, setTimer] = useState(SECONDS);
+
+  // * when the time is over, move to the next question
+  useEffect(() => {
+    if (timer <= 0) {
+      onNext();
+    }
+  }, [timer, onNext]);
+
+  // *
+  useEffect(() => {
+    // start count down
+    setTimer(SECONDS);
+    const interval = setInterval(() => {
+      setTimer((t) => {
+        if (t <= 1) {
+          clearInterval(interval);
+
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    // clear interval when timer reaches 0
+    return () => clearInterval(interval);
+  }, [currentQuestion]);
 
   return (
     <SafeAreaView style={styles.page}>
@@ -84,7 +115,7 @@ export default function QuizScreen() {
         {currentQuestion && (
           <View>
             <QuestionCard question={currentQuestion} />
-            <Text style={styles.time}>20 sec</Text>
+            <Text style={styles.time}>Time Left: {timer}s</Text>
           </View>
         )}
 

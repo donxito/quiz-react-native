@@ -18,6 +18,8 @@ interface QuizContextType {
   score: number;
   restartQuiz?: () => void;
   isFinished: boolean;
+  setIsFinished: (value: boolean) => void;
+  bestScore: number;
 }
 
 const QuizContext = createContext<QuizContextType | null>(null);
@@ -39,6 +41,15 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   const [selectedOption, setSelectedOption] = useState<string | undefined>();
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [bestScore, setBestScore] = useState(0);
+
+  // * check the best score
+  useEffect(() => {
+    if (isFinished === true && score > bestScore) {
+      setBestScore(score);
+    }
+    //console.warn(bestScore);
+  }, [isFinished]);
 
   // * Initialize the quiz with a random question
   useEffect(() => {
@@ -99,6 +110,8 @@ export default function QuizProvider({ children }: PropsWithChildren) {
         score,
         restartQuiz,
         isFinished,
+        setIsFinished,
+        bestScore,
       }}
     >
       {children}
