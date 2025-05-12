@@ -17,6 +17,7 @@ interface QuizContextType {
   onNext: () => void;
   score: number;
   restartQuiz?: () => void;
+  isFinished: boolean;
 }
 
 const QuizContext = createContext<QuizContextType | null>(null);
@@ -37,6 +38,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   const [questionCount, setQuestionCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | undefined>();
   const [score, setScore] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
 
   // * Initialize the quiz with a random question
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   const selectRandomQuestion = () => {
     if (availableQuestions.length === 0) {
       setCurrentQuestion(null);
+      setIsFinished(true);
       return;
     }
 
@@ -63,14 +66,14 @@ export default function QuizProvider({ children }: PropsWithChildren) {
 
   // * On press of the answer option, check if the answer is correct
   const onNext = () => {
-    selectRandomQuestion();
     // Check if the selected option is correct
     if (currentQuestion) {
       if (selectedOption === currentQuestion.correctAnswer) {
         setScore((curScore) => curScore + 1);
-        console.info(score);
       }
     }
+    setSelectedOption(undefined);
+    selectRandomQuestion();
   };
 
   // * restart the quiz
@@ -80,7 +83,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
     setQuestionCount(0);
     setSelectedOption(undefined);
     setScore(0);
-
+    setIsFinished(false);
     selectRandomQuestion();
   };
 
@@ -95,6 +98,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
         setSelectedOption,
         score,
         restartQuiz,
+        isFinished,
       }}
     >
       {children}
