@@ -55,7 +55,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (isFinished === true && score > bestScore) {
       setBestScore(score);
-      saveBestScore();
+      saveBestScore(score);
     }
     //console.warn(bestScore);
   }, [isFinished]);
@@ -104,7 +104,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
     setQuestionCount(0);
     setSelectedOption(undefined);
 
-    // Use setTimeout to ensure state updates are processed
+    // ensure state updates are processed
     setTimeout(() => {
       setIsFinished(false);
       selectRandomQuestion();
@@ -112,9 +112,9 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   }, []);
 
   // * Save the bestt score to AsyncStorage
-  const saveBestScore = async () => {
+  const saveBestScore = async (value: number) => {
     try {
-      await AsyncStorage.setItem("bestScore", bestScore.toString());
+      await AsyncStorage.setItem("bestScore", value.toString());
     } catch (error) {
       console.error("Error saving best score:", error);
     }

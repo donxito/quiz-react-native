@@ -6,6 +6,7 @@ import QuestionCard from "../components/QuestionCard";
 import Button from "../components/Button";
 import { useQuiz } from "../context/QuizProvider";
 import { useTimer } from "../hooks/useTimer";
+import LottieView from "lottie-react-native";
 
 const styles = StyleSheet.create({
   page: {
@@ -105,6 +106,12 @@ export default function QuizScreen() {
 
         {/* Game Over Modal */}
         <Modal visible={isFinished} transparent animationType="fade">
+          <LottieView
+            source={require("../assets/party.json")}
+            autoPlay
+            loop={false}
+            style={StyleSheet.absoluteFill}
+          />
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.statsTitle}>Quiz Complete!</Text>
