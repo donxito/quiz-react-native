@@ -5,9 +5,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import QuestionCard from "../components/QuestionCard";
 import Button from "../components/Button";
 import { useQuiz } from "../context/QuizProvider";
-import { useEffect, useState } from "react";
-
-const SECONDS = 5; // seconds for the timer
+import { useTimer } from "../hooks/useTimer";
 
 const styles = StyleSheet.create({
   page: {
@@ -70,36 +68,11 @@ export default function QuizScreen() {
     score,
     restartQuiz,
     isFinished,
-    //bestScore,
+    bestScore,
     //setIsFinished,
   } = useQuiz();
 
-  const [timer, setTimer] = useState(SECONDS);
-
-  // * when the time is over, move to the next question
-  useEffect(() => {
-    if (timer <= 0) {
-      onNext();
-    }
-  }, [timer, onNext]);
-
-  // *
-  useEffect(() => {
-    // start count down
-    setTimer(SECONDS);
-    const interval = setInterval(() => {
-      setTimer((t) => {
-        if (t <= 1) {
-          clearInterval(interval);
-
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    // clear interval when timer reaches 0
-    return () => clearInterval(interval);
-  }, [currentQuestion]);
+  const timeLeft = useTimer(5);
 
   return (
     <SafeAreaView style={styles.page}>
@@ -112,15 +85,15 @@ export default function QuizScreen() {
         </View>
 
         {/* Question Card */}
-        {currentQuestion && (
+        {currentQuestion && !isFinished && (
           <View>
             <QuestionCard question={currentQuestion} />
-            <Text style={styles.time}>Time Left: {timer}s</Text>
+            <Text style={styles.time}>Time Left: {timeLeft}s</Text>
           </View>
         )}
 
         {/* Footer */}
-        {currentQuestion && (
+        {currentQuestion && !isFinished && (
           <Button
             title="Next"
             onPress={onNext}
@@ -141,6 +114,7 @@ export default function QuizScreen() {
               <Text style={styles.statText}>
                 Percentage: {((score / totalQuestions) * 100).toFixed(1)}%
               </Text>
+              <Text style={styles.statText}>Best score: {bestScore}</Text>
               <Button
                 title="Play Again"
                 onPress={restartQuiz}

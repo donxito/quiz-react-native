@@ -4,9 +4,12 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import { Question } from "../types/types";
 import questions from "../data/questions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 interface QuizContextType {
   currentQuestion?: Question | null;
   questionCount: number;
@@ -43,10 +46,16 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   const [isFinished, setIsFinished] = useState(false);
   const [bestScore, setBestScore] = useState(0);
 
+  // * load the best score from AsyncStorage
+  useEffect(() => {
+    getBestScore();
+  }, []);
+
   // * check the best score
   useEffect(() => {
     if (isFinished === true && score > bestScore) {
       setBestScore(score);
+      saveBestScore();
     }
     //console.warn(bestScore);
   }, [isFinished]);
@@ -88,14 +97,39 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   };
 
   // * restart the quiz
-  const restartQuiz = () => {
+  const restartQuiz = useCallback(() => {
+    // Reset game state first
     setAvailableQuestions([...questions]);
-    setCurrentQuestion(null);
+    setScore(0);
     setQuestionCount(0);
     setSelectedOption(undefined);
-    setScore(0);
-    setIsFinished(false);
-    selectRandomQuestion();
+
+    // Use setTimeout to ensure state updates are processed
+    setTimeout(() => {
+      setIsFinished(false);
+      selectRandomQuestion();
+    }, 0);
+  }, []);
+
+  // * Save the bestt score to AsyncStorage
+  const saveBestScore = async () => {
+    try {
+      await AsyncStorage.setItem("bestScore", bestScore.toString());
+    } catch (error) {
+      console.error("Error saving best score:", error);
+    }
+  };
+
+  // * load the best score from AsyncStorage
+  const getBestScore = async () => {
+    try {
+      const value = await AsyncStorage.getItem("bestScore");
+      if (value !== null) {
+        setBestScore(parseInt(value));
+      }
+    } catch (error) {
+      console.error("Error loading best score:", error);
+    }
   };
 
   return (
